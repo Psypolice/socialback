@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5433/instaz?useSSL=false
+  jpa:
+    hibernate:
+      ddl-auto: validate
+logging:
+  file:
+    name: instaz.log
+    path: /
+

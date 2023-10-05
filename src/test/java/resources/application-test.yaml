@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    username: test
+    password: test
+    url:
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+
