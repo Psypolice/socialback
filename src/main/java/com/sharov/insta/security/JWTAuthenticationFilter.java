@@ -1,6 +1,8 @@
 package com.sharov.insta.security;
 
 import com.sharov.insta.service.UserService;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,6 +33,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         try {
             var jwt = getJWTFromRequest(request);
+
             if (StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)) {
                 var userId = jwtTokenProvider.getUserIdFromToken(jwt);
                 var user = userService.loadUsersById(userId);
@@ -39,8 +42,14 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
+        } catch (IllegalArgumentException ex) {
+            log.info("Illegal Argument while fetching the username !!", ex);
+        } catch (ExpiredJwtException ex) {
+            log.info("Given jwt token is expired !!", ex);
+        } catch (MalformedJwtException ex) {
+            log.info("Some changed has done in token !! Invalid Token", ex);
         } catch (Exception ex) {
-            log.error("Could not set user authentication");
+            ex.printStackTrace();
         }
 
         filterChain.doFilter(request, response);

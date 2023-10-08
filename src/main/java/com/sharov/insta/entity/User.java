@@ -4,10 +4,7 @@ package com.sharov.insta.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sharov.insta.entity.enums.ERole;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -15,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Data
+@ToString(exclude = {"role", "posts"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -44,10 +42,9 @@ public class User implements UserDetails {
     @Column(length = 1500)
     private String password;
 
-    @ElementCollection(targetClass = ERole.class)
+    @ElementCollection(targetClass = ERole.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "users_role",
     joinColumns = @JoinColumn(name = "users_id"))
-    @Builder.Default
     private Set<ERole>  role = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "users", orphanRemoval = true)

@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -67,7 +66,7 @@ public class UserService implements UserDetailsService {
     }
 
     public User loadUsersById(Long id) {
-        return userRepository.findUsersById(id).orElseThrow(null);
+        return userRepository.findUsersById(id).orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + id));
     }
 
     public static User build(User user) {

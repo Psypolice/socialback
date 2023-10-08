@@ -2,6 +2,7 @@ package com.sharov.insta.service;
 
 import com.sharov.insta.entity.ImageModel;
 import com.sharov.insta.entity.User;
+import com.sharov.insta.exceptions.ImageNotFoundException;
 import com.sharov.insta.repository.ImageRepository;
 import com.sharov.insta.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -75,7 +76,7 @@ public class ImageUploadService {
 
     public ImageModel getImageToPost(Long postId) {
         var imageModel = imageRepository.findByPostId(postId)
-                .orElseThrow();
+                .orElseThrow(() -> new ImageNotFoundException("Cannot find image for post"));
         if (ObjectUtils.isNotEmpty(imageModel)) {
             imageModel.setImageBytes(decompressByte(imageModel.getImageBytes()));
         }
