@@ -11,4 +11,8 @@ logging:
   file:
     name: instaz.log
     path: /
+  level:
+    org:
+      springframework:
+        web: trace
 
